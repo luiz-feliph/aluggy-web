@@ -1,6 +1,7 @@
 import aluggy from "../../assets/aluggy.svg";
 
-function Home() {
+
+export default function Home() {
   return (
     <div className="flex flex-col w-full min-h-screen bg-[#162D3F]">
       <img
@@ -28,5 +29,3 @@ function Home() {
     </div>
   );
 }
-
-export default Home;
