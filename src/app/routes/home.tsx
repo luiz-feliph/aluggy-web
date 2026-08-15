@@ -1,6 +1,6 @@
-import aluggy from "./assets/aluggy.svg";
+import aluggy from "../../assets/aluggy.svg";
 
-function App() {
+function Home() {
   return (
     <div className="flex flex-col w-full min-h-screen bg-[#162D3F]">
       <img
@@ -29,4 +29,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
