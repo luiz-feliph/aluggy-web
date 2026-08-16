@@ -17,10 +17,10 @@ export function FormField({ id, label, value, onChange, isValid, instructionText
   const showError = focus && value && !isValid;
 
   return (
-    <div className="mb-5">
+    <div className="mb-2">
       <label
         htmlFor={id}
-        className="block font-display text-sm font-medium text-secondary-600 mb-1.5"
+        className="block font-display text-lg font-bold text-secondary-500 mb-1.5"
       >
         {label}
       </label>
@@ -38,7 +38,7 @@ export function FormField({ id, label, value, onChange, isValid, instructionText
         onFocus={() => setFocus(true)}
         onBlur={() => setFocus(false)}
         className={`
-          w-full bg-transparent font-body text-[15px] text-secondary-700
+          w-full bg-transparent font-body text-base text-secondary-700
           border-0 border-b py-1.5 outline-none
           transition-colors duration-150
           placeholder:text-neutral-400
@@ -53,8 +53,8 @@ export function FormField({ id, label, value, onChange, isValid, instructionText
         id={`${id}-note`}
         role="alert"
         className={`
-          mt-1 text-xs font-body
-          ${showError ? "block text-error" : "hidden"}
+          mt-1 text-sm font-body
+          ${showError ? "block text-error" : "invisible"}
         `}
       >
         {instructionText}

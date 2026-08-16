@@ -17,8 +17,8 @@ export function PasswordField({ id, label, value, onChange, isValid, instruction
   const showError = focus && value && !isValid;
 
   return (
-    <div className="mb-5">
-      <label htmlFor={id} className="block font-display text-sm font-medium text-secondary-600 mb-1.5">
+    <div className="mb-2">
+      <label htmlFor={id} className="block font-display text-lg font-bold text-secondary-500 mb-1.5">
         {label}
       </label>
 
@@ -34,7 +34,7 @@ export function PasswordField({ id, label, value, onChange, isValid, instruction
           aria-describedby={`${id}-note`}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
-          className="flex-1 bg-transparent font-body text-[15px] text-secondary-700 border-0 py-1.5 outline-none"
+          className="flex-1 bg-transparent font-body text-base text-secondary-700 border-0 py-1.5 outline-none"
         />
         <button
           type="button"
@@ -46,7 +46,7 @@ export function PasswordField({ id, label, value, onChange, isValid, instruction
         </button>
       </div>
 
-      <p id={`${id}-note`} role="alert" className={`mt-1 text-xs font-body ${showError ? "block text-error" : "hidden"}`}>
+      <p id={`${id}-note`} role="alert" className={`mt-1 text-sm font-body ${showError ? "block text-error" : "invisible"}`}>
         {instructionText}
       </p>
     </div>

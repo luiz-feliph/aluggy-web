@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-lg font-display font-medium transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none",
+  "inline-flex items-center justify-center gap-2 rounded-lg font-display font-bold transition-colors cursor-pointer disabled:opacity-50 disabled:pointer-events-none",
   {
     variants: {
       variant: {
@@ -13,9 +13,9 @@ const buttonVariants = cva(
         ghost: "text-secondary-600 hover:bg-neutral-100",
       },
       size: {
-        sm: "h-8 px-3 text-sm",
-        md: "h-10 px-4 text-[15px]",
-        lg: "h-12 px-6 text-base",
+        sm: "h-8 px-3 text-base",
+        md: "h-10 px-4 text-md",
+        lg: "h-12 px-6 text-lg",
       },
     },
     defaultVariants: {
