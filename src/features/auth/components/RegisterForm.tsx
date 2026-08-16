@@ -3,6 +3,8 @@ import { FormField } from "./FormField";
 import { PasswordField } from "./PasswordField";
 import { Button } from "@/components/Button";
 import { Link } from "react-router-dom";
+import type { RegisterRequest } from "../types/types";
+import { registerUser } from "../api/register";
 
 const userNameRegex = /^(?!\s*$).{3,50}$/;
 const fullNameRegex = /^(?!\s*$).{1,100}$/;
@@ -14,27 +16,27 @@ export default function RegisterForm() {
   const userRef = useRef<HTMLInputElement>(null);
   const errorRef = useRef(null);
 
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
   const [validUserName, setValidUserName] = useState(false);
   const [userNameFocus, setUserNameFocus] = useState(false);
 
-  const [fullName, setFullName] = useState('');
+  const [fullName, setFullName] = useState("");
   const [validFullName, setValidFullName] = useState(false);
   const [fullNameFocus, setFullNameFocus] = useState(false);
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [validEmail, setValidEmail] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
 
-  const [contactNumber, setContactNumber] = useState('');
+  const [contactNumber, setContactNumber] = useState("");
   const [validContactNumber, setValidContactNumber] = useState(false);
   const [contactNumberFocus, setContactNumberFocus] = useState(false);
 
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState(false);
   const [passwordFocus, setPasswordFocus] = useState(false);
 
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
@@ -77,17 +79,61 @@ export default function RegisterForm() {
   }, [password]);
 
   useEffect(() => {
-    setErrorMsg('')
+    setErrorMsg("");
   }, [userName, fullName, email, contactNumber, password]);
 
-  const isFormInvalid = !(validUserName && validFullName && validEmail && validContactNumber && validPassword);
+  const isFormValid =
+    validUserName &&
+    validFullName &&
+    validEmail &&
+    validContactNumber &&
+    validPassword;
+
+  const handleSubmit = async (e: React.SubmitEvent) => {
+    e.preventDefault();
+
+    const isValid =
+      userNameRegex.test(userName) &&
+      fullNameRegex.test(fullName) &&
+      emailRegex.test(email) &&
+      contactNumberRegex.test(contactNumber) &&
+      passwordRegex.test(password);
+
+    if (!isValid) {
+      setErrorMsg("Verifique os dados informados.");
+      return;
+    }
+
+    const registerRequest: RegisterRequest = {
+      userName,
+      fullName,
+      emailAddress: email,
+      contactNumber,
+      password,
+    };
+
+    try {
+      const response = await registerUser(registerRequest);
+      console.log(response.data);
+      console.log(JSON.stringify(response));
+      setSuccess(true);
+    } catch (error) {
+      setErrorMsg("Erro ao realizar cadastro.");
+    }
+  };
 
   return (
     <section className="w-[400px]">
-      <p ref={errorRef} className={errorMsg ? "errorMsg" : "hidden"} aria-live="assertive">{errorMsg}</p>
+      <p
+        ref={errorRef}
+        className={errorMsg ? "errorMsg" : "hidden"}
+        aria-live="assertive"
+      >
+        {errorMsg}
+      </p>
 
-      <form>
-        <FormField 
+      <form onSubmit={handleSubmit}>
+        <FormField
           id="username"
           label="Nome de usuário"
           value={userName}
@@ -97,7 +143,7 @@ export default function RegisterForm() {
           type="text"
           inputRef={userRef}
         />
-        <FormField 
+        <FormField
           id="fullName"
           label="Nome completo"
           value={fullName}
@@ -106,7 +152,7 @@ export default function RegisterForm() {
           instructionText="Máximo de 100 caracteres."
           type="text"
         />
-        <FormField 
+        <FormField
           id="email"
           label="E-mail"
           value={email}
@@ -115,7 +161,7 @@ export default function RegisterForm() {
           instructionText="Formato de e-mail inválido."
           type="email"
         />
-        <FormField 
+        <FormField
           id="contactNumber"
           label="Número de celular"
           value={contactNumber}
@@ -124,7 +170,7 @@ export default function RegisterForm() {
           instructionText="Deve ter exatamente 11 dígitos."
           type="tel"
         />
-        <PasswordField 
+        <PasswordField
           id="password"
           label="Senha"
           value={password}
@@ -133,11 +179,11 @@ export default function RegisterForm() {
           instructionText="Deve ter de 8 a 72 caracteres."
         />
 
-        <Button 
+        <Button
           variant={"primary"}
           size={"lg"}
           className="w-full mb-6"
-          disabled={isFormInvalid}
+          disabled={!isFormValid}
         >
           Cadastrar
         </Button>
@@ -150,5 +196,5 @@ export default function RegisterForm() {
         </p>
       </form>
     </section>
-  )
+  );
 }
