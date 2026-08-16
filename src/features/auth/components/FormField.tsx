@@ -4,6 +4,7 @@ type FormFieldProps = {
   id: string;
   label: string;
   value: string;
+  placeholder: string;
   onChange: (value: string) => void;
   isValid: boolean;
   instructionText: string;
@@ -11,7 +12,7 @@ type FormFieldProps = {
   inputRef?: React.Ref<HTMLInputElement>;
 };
 
-export function FormField({ id, label, value, onChange, isValid, instructionText, type = "text", inputRef }: FormFieldProps) {
+export function FormField({ id, label, value, placeholder, onChange, isValid, instructionText, type = "text", inputRef }: FormFieldProps) {
   const [focus, setFocus] = useState(false);
 
   const showError = focus && value && !isValid;
@@ -31,6 +32,7 @@ export function FormField({ id, label, value, onChange, isValid, instructionText
         ref={inputRef}
         value={value}
         autoComplete="off"
+        placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
         required
         aria-invalid={isValid ? "false" : "true"}

@@ -5,12 +5,13 @@ type PasswordFieldProps = {
   id: string;
   label: string;
   value: string;
+  placeholder: string;
   onChange: (value: string) => void;
   isValid: boolean;
   instructionText: string;
 };
 
-export function PasswordField({ id, label, value, onChange, isValid, instructionText }: PasswordFieldProps) {
+export function PasswordField({ id, label, value, placeholder, onChange, isValid, instructionText }: PasswordFieldProps) {
   const [focus, setFocus] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,6 +29,7 @@ export function PasswordField({ id, label, value, onChange, isValid, instruction
           id={id}
           value={value}
           autoComplete="new-password"
+          placeholder={placeholder}
           onChange={(e) => onChange(e.target.value)}
           required
           aria-invalid={isValid ? "false" : "true"}
