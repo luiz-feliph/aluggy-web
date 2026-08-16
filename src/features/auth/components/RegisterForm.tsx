@@ -5,78 +5,39 @@ import { Button } from "@/components/Button";
 import { Link } from "react-router-dom";
 import type { RegisterRequest } from "../types/types";
 import { registerUser } from "../api/register";
+import { useValidatedInput } from "../hooks/useValidatedInput";
+import { MaskedFormField } from "./MaskedFormField";
 
-const userNameRegex = /^(?!\s*$).{3,50}$/;
-const fullNameRegex = /^(?!\s*$).{1,100}$/;
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const contactNumberRegex = /^\d{11}$/;
-const passwordRegex = /^(?!\s*$).{8,72}$/;
+const userNameRegex = /^[a-zA-Z0-9._-]{3,50}$/;
+const fullNameRegex = /^[\p{L}\p{M}' .?-]{1,100}$/u;
+const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+const contactNumberRegex = /^[0-9]{11}$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[\x21-\x7E]{8,72}$/;
 
-export default function RegisterForm() {
+export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
   const userRef = useRef<HTMLInputElement>(null);
   const errorRef = useRef(null);
 
   const [userName, setUserName] = useState("");
-  const [validUserName, setValidUserName] = useState(false);
-  const [userNameFocus, setUserNameFocus] = useState(false);
-
   const [fullName, setFullName] = useState("");
-  const [validFullName, setValidFullName] = useState(false);
-  const [fullNameFocus, setFullNameFocus] = useState(false);
-
   const [email, setEmail] = useState("");
-  const [validEmail, setValidEmail] = useState(false);
-  const [emailFocus, setEmailFocus] = useState(false);
-
   const [contactNumber, setContactNumber] = useState("");
-  const [validContactNumber, setValidContactNumber] = useState(false);
-  const [contactNumberFocus, setContactNumberFocus] = useState(false);
-
   const [password, setPassword] = useState("");
-  const [validPassword, setValidPassword] = useState(false);
-  const [passwordFocus, setPasswordFocus] = useState(false);
 
   const [errorMsg, setErrorMsg] = useState("");
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (userRef.current) userRef.current.focus();
   }, []);
 
-  useEffect(() => {
-    const result = userNameRegex.test(userName);
-    console.log(result);
-    console.log(userName);
-    setValidUserName(result);
-  }, [userName]);
-
-  useEffect(() => {
-    const result = fullNameRegex.test(fullName);
-    console.log(result);
-    console.log(fullName);
-    setValidFullName(result);
-  }, [fullName]);
-
-  useEffect(() => {
-    const result = emailRegex.test(email);
-    console.log(result);
-    console.log(email);
-    setValidEmail(result);
-  }, [email]);
-
-  useEffect(() => {
-    const result = contactNumberRegex.test(contactNumber);
-    console.log(result);
-    console.log(contactNumber);
-    setValidContactNumber(result);
-  }, [contactNumber]);
-
-  useEffect(() => {
-    const result = passwordRegex.test(password);
-    console.log(result);
-    console.log(password);
-    setValidPassword(result);
-  }, [password]);
+  const validUserName = useValidatedInput(userName, userNameRegex);
+  const validFullName = useValidatedInput(fullName, fullNameRegex);
+  const validEmail = useValidatedInput(email, emailRegex);
+  const validContactNumber = useValidatedInput(
+    contactNumber,
+    contactNumberRegex,
+  );
+  const validPassword = useValidatedInput(password, passwordRegex);
 
   useEffect(() => {
     setErrorMsg("");
@@ -116,7 +77,7 @@ export default function RegisterForm() {
       const response = await registerUser(registerRequest);
       console.log(response.data);
       console.log(JSON.stringify(response));
-      setSuccess(true);
+      onSuccess();
     } catch (error) {
       setErrorMsg("Erro ao realizar cadastro.");
     }
@@ -137,46 +98,55 @@ export default function RegisterForm() {
           id="username"
           label="Nome de usuário"
           value={userName}
+          placeholder="seu.usuario_01"
           onChange={setUserName}
           isValid={validUserName}
-          instructionText="Deve ter de 3 a 50 caracteres."
+          instructionText="3–50 caracteres. Use apenas letras, números, ., _ ou -"
           type="text"
           inputRef={userRef}
         />
+
         <FormField
           id="fullName"
           label="Nome completo"
           value={fullName}
+          placeholder="Seu Nome Completo"
           onChange={setFullName}
           isValid={validFullName}
-          instructionText="Máximo de 100 caracteres."
+          instructionText="Até 100 caracteres. Use letras, espaços, -, ' ou ."
           type="text"
         />
+
         <FormField
           id="email"
           label="E-mail"
           value={email}
+          placeholder="seu@email.com"
           onChange={setEmail}
           isValid={validEmail}
-          instructionText="Formato de e-mail inválido."
+          instructionText="Informe um endereço de e-mail válido."
           type="email"
         />
-        <FormField
+
+        <MaskedFormField
           id="contactNumber"
           label="Número de celular"
           value={contactNumber}
+          placeholder="(99) 99999-9999"
           onChange={setContactNumber}
           isValid={validContactNumber}
-          instructionText="Deve ter exatamente 11 dígitos."
-          type="tel"
+          instructionText="Informe exatamente 11 dígitos."
+          mask="(00) 00000-0000"
         />
+
         <PasswordField
           id="password"
           label="Senha"
           value={password}
+          placeholder="Mínimo de 8 caracteres"
           onChange={setPassword}
           isValid={validPassword}
-          instructionText="Deve ter de 8 a 72 caracteres."
+          instructionText="8–72 caracteres, com pelo menos uma letra e um número."
         />
 
         <Button
