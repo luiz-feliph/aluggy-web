@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import { FormField } from "./FormField";
 import { PasswordField } from "./PasswordField";
+import { Button } from "@/components/Button";
+import { Link } from "react-router-dom";
 
 const userNameRegex = /^(?!\s*$).{3,50}$/;
 const fullNameRegex = /^(?!\s*$).{1,100}$/;
@@ -78,6 +80,8 @@ export default function RegisterForm() {
     setErrorMsg('')
   }, [userName, fullName, email, contactNumber, password]);
 
+  const isFormInvalid = !(validUserName && validFullName && validEmail && validContactNumber && validPassword);
+
   return (
     <section className="w-[400px]">
       <p ref={errorRef} className={errorMsg ? "errorMsg" : "hidden"} aria-live="assertive">{errorMsg}</p>
@@ -85,7 +89,7 @@ export default function RegisterForm() {
       <form>
         <FormField 
           id="username"
-          label="Username"
+          label="Nome de usuário"
           value={userName}
           onChange={setUserName}
           isValid={validUserName}
@@ -95,7 +99,7 @@ export default function RegisterForm() {
         />
         <FormField 
           id="fullName"
-          label="Nome Completo"
+          label="Nome completo"
           value={fullName}
           onChange={setFullName}
           isValid={validFullName}
@@ -128,6 +132,22 @@ export default function RegisterForm() {
           isValid={validPassword}
           instructionText="Deve ter de 8 a 72 caracteres."
         />
+
+        <Button 
+          variant={"primary"}
+          size={"lg"}
+          className="w-full mb-6"
+          disabled={isFormInvalid}
+        >
+          Cadastrar
+        </Button>
+
+        <p className="text-center font-display text-lg font-medium text-secondary-500">
+          Já tem uma conta?
+          <span className="underline text-primary-500 ml-1.5">
+            <Link to="/login">Entrar</Link>
+          </span>
+        </p>
       </form>
     </section>
   )
