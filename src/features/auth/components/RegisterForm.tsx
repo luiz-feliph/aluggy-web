@@ -84,7 +84,8 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
   };
 
   return (
-    <section className="w-[400px]">
+    <section className="bg-subtle w-full px-5 py-12 rounded-t-4xl max-w-[767px] md:h-full md:rounded-none md:flex md:flex-col md:justify-center lg:px-12 xl:px-16">
+      <h1 className="block font-display text-3xl sm:text-5xl font-bold text-primary-500 mb-8 sm:my-12 shrink-0">Cadastro</h1>
       <p
         ref={errorRef}
         className={errorMsg ? "errorMsg" : "hidden"}
@@ -93,7 +94,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
         {errorMsg}
       </p>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="shrink-0">
         <FormField
           id="username"
           label="Nome de usuário"

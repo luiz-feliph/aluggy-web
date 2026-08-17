@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { CircleCheck } from "lucide-react";
 import RegisterForm from "@/features/auth/components/RegisterForm";
 import { Button } from "@/components/Button";
+import aluggy from "@/assets/aluggy.svg";
 
 export default function Register() {
   const [success, setSuccess] = useState(false);
@@ -26,7 +27,14 @@ export default function Register() {
   }
 
   return (
-    <div className="flex w-full h-screen justify-center items-center">
+    <div className="flex flex-col w-full h-screen bg-dark overflow-y-auto md:flex-row md:justify-center md:items-center">
+      <div className="bg-dark w-full py-12 shrink-0">
+        <img
+          src={aluggy}
+          alt="aluggy logo"
+          className="w-[200px] mx-auto mt-[20px] md:w-[600px] md:px-12"
+        />
+      </div>
       <RegisterForm onSuccess={() => setSuccess(true)} />
     </div>
   );

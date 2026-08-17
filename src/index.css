@@ -52,11 +52,11 @@
   --color-info: #2563EB;
   --color-info-dark: #1E40AF;
 
-  --color-bg-base: #FFFFFF;
-  --color-bg-subtle: #F9F9F9;
-  --color-bg-muted: #F0F0F0;
-  --color-bg-dark: #162D3F;
-  --color-bg-brand: #EB5020;
+  --color-base: #FFFFFF;
+  --color-subtle: #F9F9F9;
+  --color-muted: #F0F0F0;
+  --color-dark: #162D3F;
+  --color-brand: #EB5020;
 
   --spacing-1: 4px;
   --spacing-2: 8px;
