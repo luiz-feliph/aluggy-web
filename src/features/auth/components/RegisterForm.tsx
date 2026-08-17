@@ -9,7 +9,6 @@ import { useValidatedInput } from "../hooks/useValidatedInput";
 import { MaskedFormField } from "./MaskedFormField";
 
 const userNameRegex = /^[a-zA-Z0-9._-]{3,50}$/;
-const fullNameRegex = /^[\p{L}\p{M}' .?-]{1,100}$/u;
 const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 const contactNumberRegex = /^[0-9]{11}$/;
 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[\x21-\x7E]{8,72}$/;
@@ -19,7 +18,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
   const errorRef = useRef(null);
 
   const [userName, setUserName] = useState("");
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -31,21 +29,16 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
   }, []);
 
   const validUserName = useValidatedInput(userName, userNameRegex);
-  const validFullName = useValidatedInput(fullName, fullNameRegex);
   const validEmail = useValidatedInput(email, emailRegex);
-  const validContactNumber = useValidatedInput(
-    contactNumber,
-    contactNumberRegex,
-  );
+  const validContactNumber = useValidatedInput(contactNumber, contactNumberRegex,);
   const validPassword = useValidatedInput(password, passwordRegex);
 
   useEffect(() => {
     setErrorMsg("");
-  }, [userName, fullName, email, contactNumber, password]);
+  }, [userName, email, contactNumber, password]);
 
   const isFormValid =
     validUserName &&
-    validFullName &&
     validEmail &&
     validContactNumber &&
     validPassword;
@@ -55,7 +48,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
 
     const isValid =
       userNameRegex.test(userName) &&
-      fullNameRegex.test(fullName) &&
       emailRegex.test(email) &&
       contactNumberRegex.test(contactNumber) &&
       passwordRegex.test(password);
@@ -67,7 +59,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
 
     const registerRequest: RegisterRequest = {
       userName,
-      fullName,
       emailAddress: email,
       contactNumber,
       password,
@@ -105,17 +96,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           instructionText="3–50 caracteres. Use apenas letras, números, ., _ ou -"
           type="text"
           inputRef={userRef}
-        />
-
-        <FormField
-          id="fullName"
-          label="Nome completo"
-          value={fullName}
-          placeholder="Seu Nome Completo"
-          onChange={setFullName}
-          isValid={validFullName}
-          instructionText="Até 100 caracteres. Use letras, espaços, -, ' ou ."
-          type="text"
         />
 
         <FormField
