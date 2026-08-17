@@ -28,7 +28,7 @@ export default function Register() {
 
   return (
     <div className="flex flex-col w-full h-screen bg-dark overflow-y-auto md:flex-row md:justify-center md:items-center">
-      <div className="bg-dark w-full py-12 shrink-0">
+      <div className="bg-dark w-full py-12 shrink-0 md:shrink">
         <img
           src={aluggy}
           alt="aluggy logo"
