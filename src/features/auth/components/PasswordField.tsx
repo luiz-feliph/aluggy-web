@@ -42,7 +42,7 @@ export function PasswordField({ id, label, value, placeholder, onChange, isValid
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}
           aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-          className="text-primary-500 px-1 cursor-pointer"
+          className="text-primary-500 px-1 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
         >
           {showPassword ? <Eye /> : <EyeOff />}
         </button>

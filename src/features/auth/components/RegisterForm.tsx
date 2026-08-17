@@ -21,6 +21,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
   const [email, setEmail] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -32,16 +33,18 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
   const validEmail = useValidatedInput(email, emailRegex);
   const validContactNumber = useValidatedInput(contactNumber, contactNumberRegex,);
   const validPassword = useValidatedInput(password, passwordRegex);
+  const validConfirmPassword = confirmPassword.length > 0 && password === confirmPassword;;
 
   useEffect(() => {
     setErrorMsg("");
-  }, [userName, email, contactNumber, password]);
+  }, [userName, email, contactNumber, password, confirmPassword]);
 
   const isFormValid =
     validUserName &&
     validEmail &&
     validContactNumber &&
-    validPassword;
+    validPassword &&
+    validConfirmPassword;
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -50,7 +53,9 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
       userNameRegex.test(userName) &&
       emailRegex.test(email) &&
       contactNumberRegex.test(contactNumber) &&
-      passwordRegex.test(password);
+      passwordRegex.test(password) &&
+      confirmPassword.length > 0 &&
+      password === confirmPassword; 
 
     if (!isValid) {
       setErrorMsg("Verifique os dados informados.");
@@ -93,7 +98,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           placeholder="seu.usuario_01"
           onChange={setUserName}
           isValid={validUserName}
-          instructionText="3–50 caracteres. Use apenas letras, números, ., _ ou -"
+          instructionText="3-50 caracteres. Apenas letras, números, ., _ ou -"
           type="text"
           inputRef={userRef}
         />
@@ -127,7 +132,17 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           placeholder="Mínimo de 8 caracteres"
           onChange={setPassword}
           isValid={validPassword}
-          instructionText="8–72 caracteres, com pelo menos uma letra e um número."
+          instructionText="8–72 caracteres. Pelo menos uma letra e um número."
+        />
+
+        <PasswordField
+          id="confirmPassword"
+          label="Confirmar Senha"
+          value={confirmPassword}
+          placeholder="Repita a senha"
+          onChange={setConfirmPassword}
+          isValid={validConfirmPassword}
+          instructionText="As senhas devem ser iguais."
         />
 
         <Button
