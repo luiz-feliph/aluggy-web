@@ -4,6 +4,8 @@ import { CircleCheck } from "lucide-react";
 import RegisterForm from "@/features/auth/components/RegisterForm";
 import { Button } from "@/components/Button";
 import aluggy from "@/assets/aluggy.svg";
+import dotsTopLeft from "@/assets/dots-top-left.svg";
+
 
 export default function Register() {
   const [success, setSuccess] = useState(false);
@@ -27,8 +29,12 @@ export default function Register() {
   }
 
   return (
-    <div className="flex flex-col w-full h-screen bg-dark overflow-y-auto md:flex-row md:justify-center md:items-center">
+    <div className="relative flex flex-col w-full h-screen bg-dark overflow-y-auto md:flex-row md:justify-center md:items-center">
       <div className="bg-dark w-full py-12 shrink-0 md:shrink">
+        <img 
+          src={dotsTopLeft} 
+          className="absolute left-2 top-2"
+        />
         <img
           src={aluggy}
           alt="aluggy logo"
