@@ -5,8 +5,9 @@ import { Button } from "@/components/Button";
 import { Link } from "react-router-dom";
 import type { RegisterRequest } from "../types/types";
 import { registerUser } from "../api/register";
-import { useValidatedInput } from "../hooks/useValidatedInput";
+import { isValidRegex } from "@/utils/isValidRegex";
 import { MaskedFormField } from "./MaskedFormField";
+import dotsTopRight from "@/assets/dots-top-right.svg";
 
 const userNameRegex = /^[a-zA-Z0-9._-]{3,50}$/;
 const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -15,7 +16,7 @@ const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[\x21-\x7E]{8,72}$/;
 
 export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
   const userRef = useRef<HTMLInputElement>(null);
-  const errorRef = useRef(null);
+  const errorRef = useRef<HTMLParagraphElement>(null);
 
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,17 +24,18 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     if (userRef.current) userRef.current.focus();
   }, []);
 
-  const validUserName = useValidatedInput(userName, userNameRegex);
-  const validEmail = useValidatedInput(email, emailRegex);
-  const validContactNumber = useValidatedInput(contactNumber, contactNumberRegex,);
-  const validPassword = useValidatedInput(password, passwordRegex);
-  const validConfirmPassword = confirmPassword.length > 0 && password === confirmPassword;;
+  const validUserName = isValidRegex(userName, userNameRegex);
+  const validEmail = isValidRegex(email, emailRegex);
+  const validContactNumber = isValidRegex(contactNumber, contactNumberRegex,);
+  const validPassword = isValidRegex(password, passwordRegex);
+  const validConfirmPassword = confirmPassword.length > 0 && password === confirmPassword;
 
   useEffect(() => {
     setErrorMsg("");
@@ -69,18 +71,23 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
       password,
     };
 
+    setIsSubmitting(true)
     try {
       const response = await registerUser(registerRequest);
-      console.log(response.data);
-      console.log(JSON.stringify(response));
       onSuccess();
     } catch (error) {
       setErrorMsg("Erro ao realizar cadastro.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <section className="bg-subtle w-full px-5 py-12 rounded-t-4xl max-w-[767px] md:h-full md:rounded-none md:flex md:flex-col md:justify-center lg:px-12 xl:px-16">
+    <section className="relative bg-subtle w-full px-5 py-12 rounded-t-4xl max-w-[767px] md:h-full md:rounded-none md:flex md:flex-col md:justify-center lg:px-12 xl:px-16">
+      <img 
+        src={dotsTopRight} 
+        className="absolute right-5 top-6"
+      />
       <h1 className="block font-display text-3xl sm:text-5xl font-bold text-primary-500 mb-8 sm:my-12 shrink-0">Cadastro</h1>
       <p
         ref={errorRef}
@@ -150,6 +157,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           size={"lg"}
           className="w-full mb-6"
           disabled={!isFormValid}
+          isLoading={isSubmitting}
         >
           Cadastrar
         </Button>
