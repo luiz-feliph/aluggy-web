@@ -33,12 +33,14 @@ export default function Register() {
       <div className="bg-dark w-full py-12 shrink-0 md:shrink">
         <img 
           src={dotsTopLeft} 
+          alt=""
           className="absolute left-2 top-2"
         />
         <img
           src={aluggy}
           alt="aluggy logo"
           className="w-[200px] mx-auto mt-[20px] md:w-[600px] md:px-12"
+          fetchPriority="high"
         />
       </div>
       <RegisterForm onSuccess={() => setSuccess(true)} />

@@ -3,6 +3,7 @@ import { FormField } from "./FormField";
 import { PasswordField } from "./PasswordField";
 import { Button } from "@/components/Button";
 import { Link } from "react-router-dom";
+import { isAxiosError } from "axios";
 import type { RegisterRequest } from "../types/types";
 import { registerUser } from "../api/register";
 import { isValidRegex } from "@/utils/isValidRegex";
@@ -33,13 +34,12 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
 
   const validUserName = isValidRegex(userName, userNameRegex);
   const validEmail = isValidRegex(email, emailRegex);
-  const validContactNumber = isValidRegex(contactNumber, contactNumberRegex,);
+  const validContactNumber = isValidRegex(contactNumber, contactNumberRegex);
   const validPassword = isValidRegex(password, passwordRegex);
-  const validConfirmPassword = confirmPassword.length > 0 && password === confirmPassword;
+  const validConfirmPassword =
+    confirmPassword.length > 0 && password === confirmPassword;
 
-  useEffect(() => {
-    setErrorMsg("");
-  }, [userName, email, contactNumber, password, confirmPassword]);
+  const clearError = () => setErrorMsg("");
 
   const isFormValid =
     validUserName &&
@@ -57,7 +57,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
       contactNumberRegex.test(contactNumber) &&
       passwordRegex.test(password) &&
       confirmPassword.length > 0 &&
-      password === confirmPassword; 
+      password === confirmPassword;
 
     if (!isValid) {
       setErrorMsg("Verifique os dados informados.");
@@ -71,12 +71,33 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
       password,
     };
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
-      const response = await registerUser(registerRequest);
+      await registerUser(registerRequest);
       onSuccess();
     } catch (error) {
-      setErrorMsg("Erro ao realizar cadastro.");
+      if (isAxiosError(error) && error.response) {
+        const { status } = error.response;
+
+        switch (status) {
+          case 400:
+            setErrorMsg("Verifique os dados informados.");
+            break;
+          case 409:
+            setErrorMsg("Já existe uma conta com esses dados.");
+            break;
+          default:
+            setErrorMsg(
+              "Erro interno do servidor. Tente novamente mais tarde.",
+            );
+        }
+      } else {
+        setErrorMsg("Não foi possível conectar ao servidor.");
+      }
+      errorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -84,18 +105,10 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <section className="relative bg-subtle w-full px-5 py-12 rounded-t-4xl max-w-[767px] md:h-full md:rounded-none md:flex md:flex-col md:justify-center lg:px-12 xl:px-16">
-      <img 
-        src={dotsTopRight} 
-        className="absolute right-5 top-6"
-      />
-      <h1 className="block font-display text-3xl sm:text-5xl font-bold text-primary-500 mb-8 sm:my-12 shrink-0">Cadastro</h1>
-      <p
-        ref={errorRef}
-        className={errorMsg ? "errorMsg" : "hidden"}
-        aria-live="assertive"
-      >
-        {errorMsg}
-      </p>
+      <img src={dotsTopRight}  alt="" className="absolute right-5 top-6" />
+      <h1 className="block font-display text-3xl sm:text-5xl font-bold text-primary-500 mb-8 sm:my-12 shrink-0">
+        Cadastro
+      </h1>
 
       <form onSubmit={handleSubmit} className="shrink-0">
         <FormField
@@ -103,7 +116,10 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           label="Nome de usuário"
           value={userName}
           placeholder="seu.usuario_01"
-          onChange={setUserName}
+          onChange={(v) => {
+            setUserName(v);
+            clearError();
+          }}
           isValid={validUserName}
           instructionText="3-50 caracteres. Apenas letras, números, ., _ ou -"
           type="text"
@@ -115,7 +131,10 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           label="E-mail"
           value={email}
           placeholder="seu@email.com"
-          onChange={setEmail}
+          onChange={(v) => {
+            setEmail(v);
+            clearError();
+          }}
           isValid={validEmail}
           instructionText="Informe um endereço de e-mail válido."
           type="email"
@@ -126,7 +145,10 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           label="Número de celular"
           value={contactNumber}
           placeholder="(99) 99999-9999"
-          onChange={setContactNumber}
+          onChange={(v) => {
+            setContactNumber(v);
+            clearError();
+          }}
           isValid={validContactNumber}
           instructionText="Informe exatamente 11 dígitos."
           mask="(00) 00000-0000"
@@ -137,7 +159,10 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           label="Senha"
           value={password}
           placeholder="Mínimo de 8 caracteres"
-          onChange={setPassword}
+          onChange={(v) => {
+            setPassword(v);
+            clearError();
+          }}
           isValid={validPassword}
           instructionText="8–72 caracteres. Pelo menos uma letra e um número."
         />
@@ -147,10 +172,26 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           label="Confirmar Senha"
           value={confirmPassword}
           placeholder="Repita a senha"
-          onChange={setConfirmPassword}
+          onChange={(v) => {
+            setConfirmPassword(v);
+            clearError();
+          }}
           isValid={validConfirmPassword}
           instructionText="As senhas devem ser iguais."
         />
+
+        <p
+          ref={errorRef}
+          role="alert"
+          aria-live="assertive"
+          className={
+            errorMsg
+              ? "rounded-lg bg-error-bg px-4 py-3 text-sm text-error-dark mb-6"
+              : "hidden"
+          }
+        >
+          {errorMsg}
+        </p>
 
         <Button
           variant={"primary"}
