@@ -115,6 +115,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           id="username"
           label="Nome de usuário"
           value={userName}
+          maxLength={50}
           placeholder="seu.usuario_01"
           onChange={(v) => {
             setUserName(v);
@@ -130,6 +131,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           id="email"
           label="E-mail"
           value={email}
+          maxLength={255}
           placeholder="seu@email.com"
           onChange={(v) => {
             setEmail(v);
@@ -144,6 +146,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           id="contactNumber"
           label="Número de celular"
           value={contactNumber}
+          maxLength={11}
           placeholder="(99) 99999-9999"
           onChange={(v) => {
             setContactNumber(v);

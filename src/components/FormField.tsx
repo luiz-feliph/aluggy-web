@@ -4,6 +4,7 @@ type FormFieldProps = {
   id: string;
   label: string;
   value: string;
+  maxLength: number;
   placeholder: string;
   onChange: (value: string) => void;
   isValid: boolean;
@@ -12,7 +13,7 @@ type FormFieldProps = {
   inputRef?: React.Ref<HTMLInputElement>;
 };
 
-export function FormField({ id, label, value, placeholder, onChange, isValid, instructionText, type = "text", inputRef }: FormFieldProps) {
+export function FormField({ id, label, value, maxLength, placeholder, onChange, isValid, instructionText, type = "text", inputRef }: FormFieldProps) {
   const [focus, setFocus] = useState(false);
 
   const showError = focus && value && !isValid;
@@ -31,6 +32,7 @@ export function FormField({ id, label, value, placeholder, onChange, isValid, in
         id={id}
         ref={inputRef}
         value={value}
+        maxLength={maxLength}
         autoComplete="off"
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}

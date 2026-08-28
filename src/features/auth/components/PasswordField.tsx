@@ -28,6 +28,7 @@ export function PasswordField({ id, label, value, placeholder, onChange, isValid
           type={showPassword ? "text" : "password"}
           id={id}
           value={value}
+          maxLength={72}
           autoComplete="new-password"
           placeholder={placeholder}
           onChange={(e) => onChange(e.target.value)}
