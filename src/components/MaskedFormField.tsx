@@ -5,7 +5,6 @@ type MaskedFormFieldProps = {
   id: string;
   label: string;
   value: string;
-  maxLength: number;
   placeholder: string;
   onChange: (value: string) => void;
   isValid: boolean;
@@ -13,7 +12,7 @@ type MaskedFormFieldProps = {
   mask: string;
 };
 
-export function MaskedFormField({id, label, value, maxLength, placeholder, onChange, isValid, instructionText, mask,}: MaskedFormFieldProps) {
+export function MaskedFormField({id, label, value, placeholder, onChange, isValid, instructionText, mask,}: MaskedFormFieldProps) {
   const [focus, setFocus] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -43,7 +42,6 @@ export function MaskedFormField({id, label, value, maxLength, placeholder, onCha
       <input
         id={id}
         ref={inputRef}
-        maxLength={maxLength}
         autoComplete="off"
         placeholder={placeholder}
         required

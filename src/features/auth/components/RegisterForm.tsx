@@ -146,7 +146,6 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
           id="contactNumber"
           label="Número de celular"
           value={contactNumber}
-          maxLength={11}
           placeholder="(99) 99999-9999"
           onChange={(v) => {
             setContactNumber(v);
