@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { FormField } from "./FormField";
+import { FormField } from "../../../components/FormField";
 import { PasswordField } from "./PasswordField";
 import { Button } from "@/components/Button";
 import { Link } from "react-router-dom";
@@ -7,7 +7,7 @@ import { isAxiosError } from "axios";
 import type { RegisterRequest } from "../types/types";
 import { registerUser } from "../api/register";
 import { isValidRegex } from "@/utils/isValidRegex";
-import { MaskedFormField } from "./MaskedFormField";
+import { MaskedFormField } from "../../../components/MaskedFormField";
 import dotsTopRight from "@/assets/dots-top-right.svg";
 
 const userNameRegex = /^[a-zA-Z0-9._-]{3,50}$/;
